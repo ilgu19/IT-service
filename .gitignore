@@ -37,3 +37,11 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+.Rproj.user
+
+# Git에서는 필요없는 파일
+_bookdown_files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata

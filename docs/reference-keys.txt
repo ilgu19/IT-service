@@ -1,0 +1,7 @@
+chapter-1
+github-documents
+including-code
+including-plots
+chapter-2
+r-markdown
+including-plots-1
