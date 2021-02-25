@@ -1,7 +1,5 @@
-chapter-1
-github-documents
-including-code
-including-plots
-chapter-2
-r-markdown
-including-plots-1
+read-data
+환경준비
+데이터-review
+explore-data
+data-by-assignment

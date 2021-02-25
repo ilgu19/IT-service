@@ -5,20 +5,20 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>IT Service Analytics</title>
-  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="description" content="IT Service Data Analytics from 2019 to 2020" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
   <meta property="og:title" content="IT Service Analytics" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta property="og:description" content="IT Service Data Analytics from 2019 to 2020" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="IT Service Analytics" />
   
-  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="twitter:description" content="IT Service Data Analytics from 2019 to 2020" />
   
 
 <meta name="author" content="Il-Ku Kim" />
@@ -31,7 +31,7 @@
   
   
 
-<link rel="next" href="chapter-2.html"/>
+<link rel="next" href="explore-data.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -105,14 +105,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="./">IT Service Analytics</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Chapter 1</a><ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#github-documents"><i class="fa fa-check"></i><b>1.1</b> GitHub Documents</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#including-code"><i class="fa fa-check"></i><b>1.2</b> Including Code</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#including-plots"><i class="fa fa-check"></i><b>1.3</b> Including Plots</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Read Data</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#환경준비"><i class="fa fa-check"></i><b>1.1</b> 환경준비</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#데이터-review"><i class="fa fa-check"></i><b>1.2</b> 데이터 Review</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="chapter-2.html"><a href="chapter-2.html"><i class="fa fa-check"></i><b>2</b> Chapter 2</a><ul>
-<li class="chapter" data-level="2.1" data-path="chapter-2.html"><a href="chapter-2.html#r-markdown"><i class="fa fa-check"></i><b>2.1</b> R Markdown</a></li>
-<li class="chapter" data-level="2.2" data-path="chapter-2.html"><a href="chapter-2.html#including-plots-1"><i class="fa fa-check"></i><b>2.2</b> Including Plots</a></li>
+<li class="chapter" data-level="2" data-path="explore-data.html"><a href="explore-data.html"><i class="fa fa-check"></i><b>2</b> Explore Data</a><ul>
+<li class="chapter" data-level="2.1" data-path="explore-data.html"><a href="explore-data.html#data-by-assignment"><i class="fa fa-check"></i><b>2.1</b> Data by Assignment</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -139,29 +137,148 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p class="author"><em>Il-Ku Kim</em></p>
 <p class="date"><em>2021년 2월 10일</em></p>
 </div>
-<div id="chapter-1" class="section level1">
-<h1><span class="header-section-number">Chapter 1</span> Chapter 1</h1>
-<div id="github-documents" class="section level2">
-<h2><span class="header-section-number">1.1</span> GitHub Documents</h2>
-<p>This is an R Markdown format used for publishing markdown documents to GitHub. When you click the <strong>Knit</strong> button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.</p>
+<div id="read-data" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Read Data</h1>
+<div id="환경준비" class="section level2">
+<h2><span class="header-section-number">1.1</span> 환경준비</h2>
+<p>Import Packages &amp; functions</p>
+<p>Read IT service data &amp; rename columns</p>
 </div>
-<div id="including-code" class="section level2">
-<h2><span class="header-section-number">1.2</span> Including Code</h2>
-<p>You can include R code in the document as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cars)</code></pre></div>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
-</div>
-<div id="including-plots" class="section level2">
-<h2><span class="header-section-number">1.3</span> Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="IT-service_files/figure-html/pressure-1.png" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="데이터-review" class="section level2">
+<h2><span class="header-section-number">1.2</span> 데이터 Review</h2>
+<p>Review all data columns</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(DT, <span class="dv">10</span>)</code></pre></div>
+<pre><code># A tibble: 10 x 36
+   leadtime.type reopen reassign FTR   backlog state reassign.cnt reopen.cnt
+   &lt;fct&gt;         &lt;fct&gt;  &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;   &lt;fct&gt;        &lt;int&gt;      &lt;int&gt;
+ 1 1             0      0        0     0       Clos~            0          0
+ 2 2             0      1        0     0       Clos~            3          0
+ 3 1             0      0        0     0       Clos~            0          0
+ 4 1             0      0        0     0       Clos~            0          0
+ 5 1             0      0        0     0       Clos~            0          0
+ 6 1             0      0        0     0       Clos~            0          0
+ 7 3             0      0        0     0       Clos~            0          0
+ 8 3             0      0        0     0       Clos~            2          0
+ 9 1             0      0        0     0       Clos~            2          0
+10 1             0      1        0     0       Clos~            4          0
+# ... with 28 more variables: leadtime.day &lt;dbl&gt;, leadtime.hour &lt;dbl&gt;,
+#   created &lt;date&gt;, resolved &lt;date&gt;, userid &lt;chr&gt;, division &lt;chr&gt;, job &lt;chr&gt;,
+#   position &lt;chr&gt;, joindate &lt;date&gt;, leavedate &lt;dttm&gt;, user.type &lt;chr&gt;,
+#   country &lt;chr&gt;, region &lt;chr&gt;, cmg2 &lt;chr&gt;, cmg3 &lt;chr&gt;, location &lt;chr&gt;,
+#   cmg &lt;chr&gt;, cmgid &lt;chr&gt;, locationid &lt;chr&gt;, resolver &lt;chr&gt;, assignment &lt;chr&gt;,
+#   BSID &lt;chr&gt;, BSID2 &lt;chr&gt;, service.type &lt;chr&gt;, incident.type &lt;chr&gt;,
+#   priority &lt;chr&gt;, yyyymm &lt;date&gt;, day &lt;chr&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(DT)</code></pre></div>
+<pre><code> leadtime.type  reopen        reassign       FTR         backlog    
+ 1:1650381     0   :1905252   0   :1787794   0:1810327   0:1952946  
+ 2: 151824     1   :  47683   1   : 164998   1: 142619              
+ 3:  85966     NA&#39;s:     11   NA&#39;s:    154                          
+ 4:  27031                                                          
+ 5:  19217                                                          
+ 6:  18527                                                          
+                                                                    
+             state          reassign.cnt        reopen.cnt      
+ Closed         : 916625   Min.   : -2.0000   Min.   : 0.00000  
+ Closed Complete:1036320   1st Qu.:  0.0000   1st Qu.: 0.00000  
+ Progressing    :      1   Median :  0.0000   Median : 0.00000  
+                           Mean   :  0.8313   Mean   : 0.02693  
+                           3rd Qu.:  1.0000   3rd Qu.: 0.00000  
+                           Max.   :111.0000   Max.   :10.00000  
+                           NA&#39;s   :154        NA&#39;s   :11        
+  leadtime.day      leadtime.hour        created              resolved         
+ Min.   :   0.000   Min.   :    0.0   Min.   :2018-01-03   Min.   :2019-01-01  
+ 1st Qu.:   0.000   1st Qu.:    0.0   1st Qu.:2019-06-23   1st Qu.:2019-06-27  
+ Median :   1.000   Median :    8.0   Median :2019-12-11   Median :2019-12-18  
+ Mean   :   3.763   Mean   :   30.1   Mean   :2019-12-20   Mean   :2019-12-25  
+ 3rd Qu.:   3.000   3rd Qu.:   24.0   3rd Qu.:2020-06-23   3rd Qu.:2020-06-29  
+ Max.   :1637.730   Max.   :13101.8   Max.   :2020-12-31   Max.   :2020-12-31  
+                                                                               
+    userid            division             job              position        
+ Length:1952946     Length:1952946     Length:1952946     Length:1952946    
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+    joindate            leavedate                    user.type        
+ Min.   :1968-03-12   Min.   :2016-04-03 00:00:00   Length:1952946    
+ 1st Qu.:2014-10-20   1st Qu.:2020-02-28 00:00:00   Class :character  
+ Median :2017-09-04   Median :2020-08-16 00:00:00   Mode  :character  
+ Mean   :2014-12-12   Mean   :2020-08-09 09:35:33                     
+ 3rd Qu.:2019-04-01   3rd Qu.:2020-12-31 00:00:00                     
+ Max.   :2021-02-01   Max.   :2022-02-25 00:00:00                     
+ NA&#39;s   :3895         NA&#39;s   :1537070                                 
+   country             region              cmg2               cmg3          
+ Length:1952946     Length:1952946     Length:1952946     Length:1952946    
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   location             cmg               cmgid            locationid       
+ Length:1952946     Length:1952946     Length:1952946     Length:1952946    
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   resolver          assignment            BSID              BSID2          
+ Length:1952946     Length:1952946     Length:1952946     Length:1952946    
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ service.type       incident.type        priority             yyyymm          
+ Length:1952946     Length:1952946     Length:1952946     Min.   :2019-01-01  
+ Class :character   Class :character   Class :character   1st Qu.:2019-06-01  
+ Mode  :character   Mode  :character   Mode  :character   Median :2019-12-01  
+                                                          Mean   :2019-12-11  
+                                                          3rd Qu.:2020-06-01  
+                                                          Max.   :2020-12-01  
+                                                                              
+     day           
+ Length:1952946    
+ Class :character  
+ Mode  :character  
+                   
+                   
+                   
+                   </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># str(DT)</span></code></pre></div>
+<p>Review numeric columns</p>
+<pre><code>            reassign.cnt   reopen.cnt leadtime.day leadtime.hour
+n           1.952946e+06 1.952946e+06 1.952946e+06  1.952946e+06
+na.count    1.540000e+02 1.100000e+01 0.000000e+00  0.000000e+00
+min        -2.000000e+00 0.000000e+00 0.000000e+00  0.000000e+00
+max         1.110000e+02 1.000000e+01 1.637730e+03  1.310184e+04
+range       1.130000e+02 1.000000e+01 1.637730e+03  1.310184e+04
+mean        8.312601e-01 2.692768e-02 3.762849e+00  3.010256e+01
+sd          1.669284e+00 1.799239e-01 1.343812e+01  1.075037e+02
+qt1st.25%   0.000000e+00 0.000000e+00 0.000000e+00  0.000000e+00
+qt2nd.50%   0.000000e+00 0.000000e+00 1.000000e+00  8.000000e+00
+qt3st.75%   1.000000e+00 0.000000e+00 3.000000e+00  2.400000e+01
+qt90th.90%  2.000000e+00 0.000000e+00 8.000000e+00  6.400000e+01
+qt95th.95%  3.000000e+00 0.000000e+00 1.500000e+01  1.200000e+02</code></pre>
+<pre><code>$reassign.cnt
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA&#39;s 
+ -2.0000   0.0000   0.0000   0.8313   1.0000 111.0000      154 
+
+$reopen.cnt
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA&#39;s 
+ 0.00000  0.00000  0.00000  0.02693  0.00000 10.00000       11 
+
+$leadtime.day
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+   0.000    0.000    1.000    3.763    3.000 1637.730 
+
+$leadtime.hour
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    0.0     0.0     8.0    30.1    24.0 13101.8 </code></pre>
 
 </div>
 </div>
@@ -171,7 +288,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
         </div>
       </div>
 
-<a href="chapter-2.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="explore-data.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

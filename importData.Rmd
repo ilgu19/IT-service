@@ -1,21 +1,78 @@
-# Chapter 2
+# Explore Data
 
-## R Markdown
+## Data by Assignment
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars2}
-summary(cars)
+Data resolved in 2020 by assigment group, measurement is the leadtime, # of day, to resolve the request
+Use standard R function: summarise_at
+```{r byAssignment, echo=TRUE, message=FALSE, warning=FALSE, comment="", paged.print=TRUE}
+# 그룹별 데이터
+grp <- "assignment"; col <- "leadtime.day" # leadtime.hour
+IT.leadtime <-
+  DT %>% filter(resolved >= "2020-01-01") %>% 
+  group_by(.dots = grp) %>% 
+  summarise_at(vars(leadtime.day), lst(length,median, mean, sd, max))
+IT.leadtime[order(IT.leadtime$length, decreasing = TRUE),] %>% head(20)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure2, echo=FALSE}
-plot(pressure)
+Use customized function: zdesc.stat2
+```{r byAssignment2, echo=TRUE, message=FALSE, warning=FALSE, comment="", paged.print=TRUE}
+IT.leadtime2 <-
+  DT %>% filter(resolved >= "2020-01-01") %>% select(grp, col) %>% 
+  group_by(.dots = grp) %>% nest() %>% # 동적으로 group by하기 
+  mutate(stat = map(data, zdesc.stat2)) %>% 
+  unnest(stat) %>% arrange(desc(n))
+IT.leadtime2$data <- NULL; IT.leadtime2 <- as_tibble(IT.leadtime2)
+IT.leadtime2[order(IT.leadtime2$n, decreasing = TRUE),] %>% head(20)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Leadtime Distribution for all requests in 2020
+```{r graph1, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
+DT %>% filter(resolved >= "2020-01-01") %>% ggplot(aes(x = leadtime.day)) + 
+  geom_density() + scale_x_log10(breaks = c( 1, 5, 10, 20)) +
+  labs(title = "Leadtime Distribution", subtitle = "", caption = "", x = "Days", y = "Density")
+
+```
+Leadtime Distribution by assignment
+
+Density Plot
+```{r graph2, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
+i <- 1
+assignGrp <- subset(IT.leadtime2,  n > 10000)$assignment
+ggplots <- vector('list', length(assignGrp))
+for (k in assignGrp) {
+  ggplots[[i]] <-
+    local({
+      data <- DT %>% filter(assignment == k, resolved >= "2020-01-01")
+      xaxis <- quantile(data$leadtime.day, 0.99,na.rm = T)
+      p1 <-  data %>% ggplot(aes(x = leadtime.day)) + 
+        geom_density(fill = "lightgreen") + 
+        coord_cartesian(xlim = c(0, xaxis)) + labs(subtitle = k, x = "Days", y = "Density")
+      # print(p1)  
+    })
+  i <- i + 1
+}
+
+if (!require(gridExtra)) { install.packages('gridExtra') ; library(gridExtra)}
+grid.arrange(ggplots[[1]], ggplots[[2]], ggplots[[3]], ggplots[[4]], ggplots[[5]], ggplots[[6]], ggplots[[7]], ggplots[[8]], ggplots[[9]], nrow = 3)
+
+```
+
+BoxPlot by Month
+```{r graph3, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
+i <- 1
+assignGrp <- subset(IT.leadtime2,  n > 10000)$assignment
+ggplots <- vector('list', length(assignGrp))
+for (k in assignGrp) {
+  ggplots[[i]] <-
+    local({
+      data <- DT %>% filter(assignment == k, resolved >= "2020-01-01")
+      yaxis <- quantile(data$leadtime.hour, 0.99,na.rm = T)
+      p1 <-  data %>% ggplot(aes(x = yyyymm, y = leadtime.hour, group = yyyymm)) + 
+        geom_boxplot() + coord_cartesian(ylim = c(0, yaxis)) + labs(subtitle = k, x = "Month", y = "Day")
+      # print(p1)  
+    })
+  i <- i + 1
+}
+grid.arrange(ggplots[[1]], ggplots[[2]], ggplots[[3]], ggplots[[4]], ggplots[[5]], ggplots[[6]], ggplots[[7]], ggplots[[8]], ggplots[[9]], nrow = 3)
+
+```
