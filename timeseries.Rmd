@@ -1,0 +1,57 @@
+# Data trend
+
+## Time series for top services
+
+```{r timeseries1, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
+i <- 1
+assignGrp <- subset(IT.leadtime2,  n > 10000)$assignment
+ggplots <- vector('list', length(assignGrp))
+for (k in assignGrp) {
+  ggplots[[i]] <-
+    local({
+      data <- DT %>% filter(assignment == k, created >= "2019-01-01") %>%  # 2019 생성일자 부터 시작
+        group_by(yyyymmC) %>% dplyr::summarize(ticket = n(), user = n_distinct(userid)) %>%
+        pivot_longer(c(`ticket`,`user`), names_to = "Type", values_to = "n")
+      
+      yaxis <- quantile(data$n, 0.99,na.rm = T)
+      p1 <-  data %>% ggplot(aes(x = yyyymmC, y = n, color = Type)) + 
+        geom_line() + geom_point() + geom_smooth() +
+        scale_x_date(date_breaks = "2 months", date_labels = "%y/%b") +
+        labs(subtitle = k, x = "Month", y = "# of Users, Tickets") + theme_bw() + theme(legend.position = "none") 
+        # theme(legend.position = c(0.9, 0.2)) + scale_fill_viridis_d()
+      # print(p1)  
+    })
+  i <- i + 1
+}
+
+grid.arrange(ggplots[[1]], ggplots[[8]], nrow = 1)
+grid.arrange(ggplots[[3]], ggplots[[12]], nrow = 1)
+grid.arrange(ggplots[[10]], ggplots[[11]], nrow = 1)
+```
+
+```{r timeseries2, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
+i <- 1
+assignGrp <- subset(IT.leadtime2,  n > 10000)$assignment
+assignGrp <- assignGrp[c(1,8,3,12,10,11)]
+ggplots <- vector('list', length(assignGrp))
+for (k in assignGrp) {
+  ggplots[[i]] <-
+    local({
+      data <- DT %>% filter(assignment == k, created >= "2019-01-01") %>% group_by(yyyymmC) %>% 
+        dplyr::summarize(ticket = n(), user = n_distinct(userid)) %>% 
+        mutate(yyyymmC = yearmonth(yyyymmC)) %>% as_tsibble(index = yyyymmC)
+      
+      p1 <- data %>% model(stl = STL(user ~ trend(window = 7))) %>% components(dcmp) %>% autoplot() +
+        labs(title =NULL, subtitle = k, x = "Month", y = "Tickets") + theme_bw()
+      
+      # dcmp <- data %>% model(stl = STL(user ~ trend(window = 7))) 
+      # p1 <- autoplot(data, user, color = "gray") + autolayer(components(dcmp), trend, color = "#D55E00") +
+      #   labs(title =NULL, subtitle = k, x = "Month", y = "Tickets") + theme_bw()
+    })
+  i <- i + 1
+}
+
+grid.arrange(ggplots[[1]], ggplots[[2]], nrow = 1)
+grid.arrange(ggplots[[3]], ggplots[[4]], nrow = 1)
+grid.arrange(ggplots[[5]], ggplots[[6]], nrow = 1)
+```

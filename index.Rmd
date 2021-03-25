@@ -8,97 +8,55 @@ description: "IT Service Data Analytics from 2019 to 2020"
 ---
 # Read Data
 
-## 환경준비
+## Setup Environment
 
 Import Packages & functions
-```{r setEnv, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
+```{r setEnv, echo=TRUE, message=FALSE, warning=FALSE, comment=""}
 if (!require(tidyverse)) { install.packages('tidyverse') ; library(tidyverse)}
 if (!require(caret)) { install.packages('caret') ; library(caret)}
+if (!require(gridExtra)) { install.packages('gridExtra') ; library(gridExtra)}
+
+# Time Series Data
+if (!require(forecast)) { install.packages('forecast') ; library(forecast)}
+if (!require(tseries)) { install.packages('tseries') ; library(tseries)}
+if (!require(tsibble)) { install.packages('tsibble') ; library(tsibble)}
+if (!require(feasts)) { install.packages('feasts') ; library(feasts)} # ljung_box 
+if (!require(fable)) { install.packages('fable') ; library(fable)} # forecast 대신 사용
 source('C:/ML/MyR/Myfunction.R') # 사용자 함수 모음
 ```
 
-Read IT service data & rename columns
-```{r readData, echo= FALSE, message=FALSE, warning=FALSE, comment=""}
+Read IT service data
+```{r readData, echo= TRUE, message=FALSE, warning=FALSE, comment=""}
 # 데이터 읽기 
 if (!require(data.table)) { install.packages('data.table') ; library(data.table)}
-ITservice <- fread("C:/ML/IT service/Data/2020/all_incidents.csv", header = TRUE, stringsAsFactors=FALSE, na.strings=getOption("datatable.na.strings","NA"))
+DT <- fread("C:/ML/IT service2/data/data_all.csv", header = TRUE, stringsAsFactors=FALSE, na.strings=getOption("datatable.na.strings","NA"))
 
-# 데이터 정리
-cols <- 
-  c( # ticket data
-    "LT10_20", "reopen", "reassign", "u_FTR2", "backlog", "state2", "reassignment_cnt", "reopen_count", 
-    "LT_day", "LT_hour", "created_on2", "resolved2",
-    # user data
-    "Z_cmguserid", "request_div", "Z_jobfamily", "Z_position", "Z_user_joindate", "Z_user_leavedate", "Z_employeetype", 
-    # location
-    "Y_country", "Y_timezone", "Y_cmg_unitname", "Y_cmgofficialname", "Y_locationname", "Y_cmg_shortname", "Y_cmgnumber", "Y_location_id",
-    # resover data
-    "resolved_by_id", "assignment_grp", "X_bs_id", "u_location", "X_service_component", "incident_type", "priority"
-  )
+DT <- as_tibble(DT)
+```
 
-DT <- as_tibble(ITservice[, ..cols])
+## Data Review 
 
-DT <-
-  DT %>% rename(
-    leadtime.type      	=	LT10_20,                                                     
-    FTR               	=	u_FTR2,
-    state             	=	state2,                                                     
-    reassign.cnt       	=	reassignment_cnt,
-    reopen.cnt          =	reopen_count,                                                     
-    leadtime.day       	=	LT_day,
-    leadtime.hour      	=	LT_hour,                                                     
-    created           	=	created_on2,
-    resolved           	=	resolved2,
-    userid            	=	Z_cmguserid,                                                     
-    division           	=	request_div,
-    cmg               	=	Y_cmg_shortname,
-    cmg2               	=	Y_cmg_unitname,
-    cmg3              	=	Y_cmgofficialname,
-    cmgid              	=	Y_cmgnumber,
-    location          	=	Y_locationname,  
-    locationid        	=	Y_location_id,
-    job               	=	Z_jobfamily,                                                     
-    position          	=	Z_position,
-    joindate            =	Z_user_joindate,                                                     
-    leavedate          	=	Z_user_leavedate,
-    user.type         	=	Z_employeetype,                                                     
-    country           	=	Y_country,
-    region       	      =	Y_timezone,
-    resolver           	=	resolved_by_id,                                                     
-    assignment         	=	assignment_grp,
-    BSID               	=	X_bs_id,                                                     
-    BSID2              	=	u_location,
-    service.type       	=	X_service_component,                                                     
-    incident.type      	=	incident_type
-  )
-
-DT <- DT %>% filter(resolved >= '2019-01-01' & resolved <= '2020-12-31') # 2019, 2020 데이터만 연구 대상으로 한다.
-DT$yyyymm <- as.Date(paste0(substr(DT$resolved,1,7), "-01"))
-DT$day <- weekdays(DT$created)
-# DT[ DT$day %in% c("토요일", "일요일"), "workday" ] <- 0
+Review data & convert data into factor
+```{r reviewData, echo=TRUE, message=FALSE, warning=FALSE, comment=""}
 DT$leadtime.type <- as.factor(DT$leadtime.type)
 DT$FTR <- as.factor(DT$FTR)
 DT$backlog <- as.factor(DT$backlog)
 DT$state <- as.factor(DT$state)
 DT$reopen <- as.factor(DT$reopen)
 DT$reassign <- as.factor(DT$reassign)
-
 DT$cmgid <- as.character(DT$cmgid)
 DT$locationid <- as.character(DT$locationid)
-```
 
-## 데이터 Review 
-
-Review all data columns
-```{r reviewData, echo=TRUE, message=FALSE, warning=FALSE, comment=""}
 head(DT, 10)
-summary(DT)
-# str(DT)
+glimpse(DT)
 
 ```
 
-Review numeric columns
+Review numeric data
 ```{r reviewData2, echo=FALSE, message=FALSE, warning=FALSE, comment="", paged.print=TRUE}
+zzop <- options()
+options("scipen" = 5, "digits" = 2)
+
 t.numeric <- DT[,sapply(DT, is.numeric)]
 sapply(t.numeric, zdesc.stat)
 sapply(t.numeric, summary)

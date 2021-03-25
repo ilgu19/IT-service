@@ -8,8 +8,8 @@ Use standard R function: summarise_at
 # 그룹별 데이터
 grp <- "assignment"; col <- "leadtime.day" # leadtime.hour
 IT.leadtime <-
-  DT %>% filter(resolved >= "2020-01-01") %>% 
-  group_by(.dots = grp) %>% 
+  DT %>% filter(resolved >= "2020-01-01" & resolved <= "2020-12-31") %>% 
+  group_by(.dots = all_of(grp)) %>% 
   summarise_at(vars(leadtime.day), lst(length,median, mean, sd, max))
 IT.leadtime[order(IT.leadtime$length, decreasing = TRUE),] %>% head(20)
 ```
@@ -17,47 +17,52 @@ IT.leadtime[order(IT.leadtime$length, decreasing = TRUE),] %>% head(20)
 Use customized function: zdesc.stat2
 ```{r byAssignment2, echo=TRUE, message=FALSE, warning=FALSE, comment="", paged.print=TRUE}
 IT.leadtime2 <-
-  DT %>% filter(resolved >= "2020-01-01") %>% select(grp, col) %>% 
-  group_by(.dots = grp) %>% nest() %>% # 동적으로 group by하기 
+  DT %>% filter(resolved >= "2020-01-01" & resolved <= "2020-12-31") %>% select(all_of(grp), all_of(col)) %>% 
+  group_by(.dots = all_of(grp)) %>% nest() %>% # 동적으로 group by하기 
   mutate(stat = map(data, zdesc.stat2)) %>% 
   unnest(stat) %>% arrange(desc(n))
 IT.leadtime2$data <- NULL; IT.leadtime2 <- as_tibble(IT.leadtime2)
 IT.leadtime2[order(IT.leadtime2$n, decreasing = TRUE),] %>% head(20)
 ```
 
-Leadtime Distribution for all requests in 2020
+## Data visualization
+
+Leadtime Distribution at glance for all requests in 2020
 ```{r graph1, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
-DT %>% filter(resolved >= "2020-01-01") %>% ggplot(aes(x = leadtime.day)) + 
-  geom_density() + scale_x_log10(breaks = c( 1, 5, 10, 20)) +
-  labs(title = "Leadtime Distribution", subtitle = "", caption = "", x = "Days", y = "Density")
+DT %>% filter(resolved >= "2020-01-01"& resolved <= "2020-12-31") %>% ggplot(aes(x = leadtime.day)) + 
+  geom_density(fill = "lightgreen") + scale_x_log10(breaks = c( 1, 5, 10, 20)) +
+  labs(title = "Leadtime Distribution", subtitle = "", caption = "", x = "Days", y = "Density") + theme_bw()
 
 ```
-Leadtime Distribution by assignment
 
-Density Plot
-```{r graph2, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
+## Data visualization for top services
+
+Density Plot for Leadtime Distribution 
+Most of requests resolved take less than 10 days, and long tail in the graph shows long running tickets to resolve 
+
+```{r graph2, echo=TRUE, message=FALSE, warning=FALSE, comment=""}
 i <- 1
 assignGrp <- subset(IT.leadtime2,  n > 10000)$assignment
 ggplots <- vector('list', length(assignGrp))
 for (k in assignGrp) {
   ggplots[[i]] <-
     local({
-      data <- DT %>% filter(assignment == k, resolved >= "2020-01-01")
+      data <- DT %>% filter(assignment == k, resolved >= "2020-01-01" & resolved <= "2020-12-31")
       xaxis <- quantile(data$leadtime.day, 0.99,na.rm = T)
       p1 <-  data %>% ggplot(aes(x = leadtime.day)) + 
         geom_density(fill = "lightgreen") + 
-        coord_cartesian(xlim = c(0, xaxis)) + labs(subtitle = k, x = "Days", y = "Density")
+        coord_cartesian(xlim = c(0, xaxis)) + labs(subtitle = k, x = "Days", y = "Density") + theme_bw()
       # print(p1)  
     })
   i <- i + 1
 }
 
-if (!require(gridExtra)) { install.packages('gridExtra') ; library(gridExtra)}
-grid.arrange(ggplots[[1]], ggplots[[2]], ggplots[[3]], ggplots[[4]], ggplots[[5]], ggplots[[6]], ggplots[[7]], ggplots[[8]], ggplots[[9]], nrow = 3)
-
+grid.arrange(ggplots[[1]], ggplots[[8]], nrow = 1)
+grid.arrange(ggplots[[3]], ggplots[[12]], nrow = 1)
+grid.arrange(ggplots[[10]], ggplots[[11]], nrow = 1)
 ```
 
-BoxPlot by Month
+Monthly BoxPlot shows how much lead time varies across months and how many LRT, outlier, each service has
 ```{r graph3, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
 i <- 1
 assignGrp <- subset(IT.leadtime2,  n > 10000)$assignment
@@ -65,14 +70,15 @@ ggplots <- vector('list', length(assignGrp))
 for (k in assignGrp) {
   ggplots[[i]] <-
     local({
-      data <- DT %>% filter(assignment == k, resolved >= "2020-01-01")
-      yaxis <- quantile(data$leadtime.hour, 0.99,na.rm = T)
-      p1 <-  data %>% ggplot(aes(x = yyyymm, y = leadtime.hour, group = yyyymm)) + 
-        geom_boxplot() + coord_cartesian(ylim = c(0, yaxis)) + labs(subtitle = k, x = "Month", y = "Day")
+      data <- DT %>% filter(assignment == k, resolved >= "2020-01-01" & resolved <= "2020-12-31")
+      yaxis <- quantile(data$leadtime.day, 0.99,na.rm = T)
+      p1 <-  data %>% ggplot(aes(x = yyyymm, y = leadtime.day, group = yyyymm)) + 
+        geom_boxplot() + coord_cartesian(ylim = c(0, yaxis)) + labs(subtitle = k, x = "Month", y = "Day") + theme_bw()
       # print(p1)  
     })
   i <- i + 1
 }
-grid.arrange(ggplots[[1]], ggplots[[2]], ggplots[[3]], ggplots[[4]], ggplots[[5]], ggplots[[6]], ggplots[[7]], ggplots[[8]], ggplots[[9]], nrow = 3)
-
+grid.arrange(ggplots[[1]], ggplots[[8]], nrow = 1)
+grid.arrange(ggplots[[3]], ggplots[[12]], nrow = 1)
+grid.arrange(ggplots[[10]], ggplots[[11]], nrow = 1)
 ```

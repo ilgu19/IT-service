@@ -1,5 +1,9 @@
 read-data
-환경준비
-데이터-review
+setup-environment
+data-review
 explore-data
 data-by-assignment
+data-visualization
+data-visualization-for-top-services
+data-trend
+time-series-for-top-services
